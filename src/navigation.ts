@@ -11,7 +11,7 @@ export const pathnames = {
 } satisfies Pathnames<typeof locales>;
 
 export const { Link, redirect, usePathname, useRouter } =
-  createLocalizedPathnamesNavigation({
+  createLocalizedPathnamesNavigation<typeof locales, Record<string, string>>({
     locales,
     pathnames,
   });

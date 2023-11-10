@@ -1,8 +1,10 @@
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import { TRPCReactProvider } from "@/trpc/react";
 import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
+import { TRPCReactProvider } from "@/trpc/react";
+import { ThemeProviders } from "@/app/theme-provider";
 import { locales } from "@/navigation";
+import { Toaster } from "react-hot-toast";
 
 type Props = {
   children: React.ReactNode;
@@ -16,10 +18,11 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params: { locale },
 }: Omit<Props, "children">) {
-  const t = await getTranslations({ locale, namespace: "Index" });
+  const t = await getTranslations();
 
   return {
     title: t("title"),
+    description: t("description"),
     icons: [{ rel: "icon", url: "/favicon.ico" }],
   };
 }
@@ -35,9 +38,12 @@ export default async function LocaleLayout({
   unstable_setRequestLocale(locale);
 
   return (
-    <html lang={locale}>
-      <body>
-        <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
+    <html lang={locale} suppressHydrationWarning className="h-full w-full">
+      <body className="h-full w-full">
+        <TRPCReactProvider headers={headers()}>
+          <ThemeProviders>{children}</ThemeProviders>
+        </TRPCReactProvider>
+        <Toaster />
       </body>
     </html>
   );
