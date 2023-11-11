@@ -2,18 +2,22 @@ import { getSession } from "@/lib/session";
 import { db } from "@/server/db";
 import {
   MakeNextJsonResponse,
+  BadRequestException,
   UnauthorizedException,
 } from "@/utils/http-exception";
-
-type Params = {
-  account: string;
-  password: string;
-};
+import { SignInInput } from "@/utils/user-validate";
 
 export async function POST(req: Request) {
-  const { account, password } = (await req.json()) as Params;
+  const validate = await SignInInput.spa(await req.json());
 
-  const user = await db.user.signIn({ account, password });
+  if (!validate.success) {
+    const [error] = validate.error.issues;
+    return BadRequestException(error?.message!);
+  }
+
+  const { email, password, remember } = validate.data;
+
+  const user = await db.user.signIn({ email, password });
 
   if (user === null)
     return UnauthorizedException("Invalid account or password");
@@ -23,7 +27,11 @@ export async function POST(req: Request) {
     data: user,
     message: "Successful",
   });
-  const session = await getSession(req, resp);
+  const session = await getSession(
+    req,
+    resp,
+    remember ? undefined : { cookieOptions: { maxAge: undefined } },
+  );
   session.user = user;
 
   await session.save();

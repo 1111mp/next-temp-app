@@ -22,15 +22,22 @@ const sessionOptions: IronSessionOptions = {
   },
 };
 
-const getSession = async (req: Request, res: Response) => {
-  const session = getIronSession<IronSessionData>(req, res, sessionOptions);
+const getSession = async (
+  req: Request,
+  res: Response,
+  options?: Partial<IronSessionOptions>,
+) => {
+  const session = getIronSession<IronSessionData>(req, res, {
+    ...sessionOptions,
+    ...options,
+  });
   return session;
 };
 
 const getServerActionSession = async () => {
   const session = getServerActionIronSession<IronSessionData>(
     sessionOptions,
-    cookies()
+    cookies(),
   );
   return session;
 };

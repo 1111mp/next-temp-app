@@ -24,7 +24,7 @@ export const PrismaExtensionTransformedField = Prisma.defineExtension(
           },
         },
       },
-    })
+    }),
 );
 
 export const PrismaExtensionInstanceMethods = Prisma.defineExtension((prisma) =>
@@ -55,7 +55,7 @@ export const PrismaExtensionInstanceMethods = Prisma.defineExtension((prisma) =>
         },
       },
     },
-  })
+  }),
 );
 
 export const PrismaExtensionStaticMethods = Prisma.defineExtension((prisma) =>
@@ -65,7 +65,7 @@ export const PrismaExtensionStaticMethods = Prisma.defineExtension((prisma) =>
       $allModels: {
         async exists<T>(
           this: T,
-          where: Prisma.Args<T, "findFirst">["where"]
+          where: Prisma.Args<T, "findFirst">["where"],
         ): Promise<boolean> {
           const context = Prisma.getExtensionContext(this);
           const result = await (context as any).findFirst({ where });
@@ -74,21 +74,22 @@ export const PrismaExtensionStaticMethods = Prisma.defineExtension((prisma) =>
       },
       user: {
         async signUp(args: Prisma.UserCreateInput) {
-          const { account, password } = args;
+          const { name, email, password } = args;
           const hashed = await hash(password, 10);
 
           return prisma.user.create({
             data: {
-              account,
+              name,
+              email,
               password: hashed,
             },
           });
         },
 
-        async signIn(args: Prisma.UserCreateInput) {
-          const { account, password } = args;
+        async signIn(args: Pick<Prisma.UserCreateInput, "email" | "password">) {
+          const { email, password } = args;
           const user = await prisma.user.findFirst({
-            where: { account },
+            where: { email },
           });
 
           if (user === null) return null;
@@ -98,15 +99,15 @@ export const PrismaExtensionStaticMethods = Prisma.defineExtension((prisma) =>
         },
       },
     },
-  })
+  }),
 );
 
 // Exclude keys from model
 function exclude<Model extends object, Key extends keyof Model>(
   model: Model,
-  keys: Key[]
+  keys: Key[],
 ): Omit<Model, Key> {
   return Object.fromEntries(
-    Object.entries(model).filter(([key]) => !keys.includes(key as Key))
+    Object.entries(model).filter(([key]) => !keys.includes(key as Key)),
   ) as Omit<Model, Key>;
 }
