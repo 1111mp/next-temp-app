@@ -15,3 +15,13 @@ export const SignUpInput = z.object({
   password: z.string().regex(regex, "Invalid password"),
   remember: z.boolean().default(false),
 });
+
+export const MailerInput = z.object({
+  email: z
+    .string({
+      invalid_type_error: "Invalid email",
+      required_error: "Invalid email",
+    })
+    .email("Invalid email"),
+  remember: z.boolean().default(false),
+});

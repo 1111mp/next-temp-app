@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 type JsonResponse = {
   code: number;
   message: string;
-  data: unknown;
+  data?: unknown;
 };
 /**
  * @description: Make json NextResponse, the HTTP response status code will be 200.
@@ -16,7 +16,7 @@ export function MakeNextJsonResponse(json: JsonResponse) {
 
 export function MakeNextRedirectResponse(
   url: string | URL,
-  init?: number | ResponseInit
+  init?: number | ResponseInit,
 ) {
   return NextResponse.redirect(url, init);
 }

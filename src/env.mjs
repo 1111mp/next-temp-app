@@ -12,7 +12,7 @@ export const env = createEnv({
       .url()
       .refine(
         (str) => !str.includes("YOUR_MYSQL_URL_HERE"),
-        "You forgot to change the default URL"
+        "You forgot to change the default URL",
       ),
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -27,6 +27,13 @@ export const env = createEnv({
     REDIS_DB: z.string(),
     REDIS_USERNAME: z.string(),
     REDIS_PWD: z.string(),
+
+    // nodemailer
+    SMTP_HOST: z.string(),
+    SMTP_PORT: z.string(),
+    EMAIL_FROM: z.string(),
+    SMTP_USER: z.string().email(),
+    SMTP_PASSWORD: z.string(),
   },
 
   /**
@@ -54,6 +61,12 @@ export const env = createEnv({
     REDIS_DB: process.env.REDIS_DB,
     REDIS_USERNAME: process.env.REDIS_USERNAME,
     REDIS_PWD: process.env.REDIS_PWD,
+    // nodemailer
+    SMTP_HOST: process.env.SMTP_HOST,
+    SMTP_PORT: process.env.SMTP_PORT,
+    EMAIL_FROM: process.env.EMAIL_FROM,
+    SMTP_USER: process.env.SMTP_USER,
+    SMTP_PASSWORD: process.env.SMTP_PASSWORD,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

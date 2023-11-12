@@ -97,6 +97,16 @@ export const PrismaExtensionStaticMethods = Prisma.defineExtension((prisma) =>
           const same = await compare(password, user.password);
           return same ? exclude(user, ["password"]) : null;
         },
+
+        async mailer(email: string) {
+          const user = await prisma.user.findFirst({
+            where: { email },
+          });
+
+          if (user === null) return null;
+
+          return exclude(user, ["password"]);
+        },
       },
     },
   }),
