@@ -1,6 +1,7 @@
 import { getIronSession, getServerActionIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { env } from "@/env.mjs";
+import { merge } from "lodash";
 
 import type { IronSessionData, IronSessionOptions } from "iron-session";
 import type { User } from "@prisma/client";
@@ -18,7 +19,7 @@ const sessionOptions: IronSessionOptions = {
   // secure: true should be used in production (HTTPS) but can't be used in development (HTTP)
   cookieOptions: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: env.NODE_ENV === "production",
   },
 };
 
@@ -27,10 +28,12 @@ const getSession = async (
   res: Response,
   options?: Partial<IronSessionOptions>,
 ) => {
-  const session = getIronSession<IronSessionData>(req, res, {
-    ...sessionOptions,
-    ...options,
-  });
+  console.log(merge(sessionOptions, options));
+  const session = getIronSession<IronSessionData>(
+    req,
+    res,
+    merge(sessionOptions, options),
+  );
   return session;
 };
 

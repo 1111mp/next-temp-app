@@ -26,8 +26,8 @@ export default function LoginPage({ params: { locale } }: Props) {
 
   return (
     <>
-      <div className="m-auto h-full max-w-screen-xl overflow-hidden px-6">
-        <div className="m-auto max-w-md max-md:mt-10 md:mt-32">
+      <div className="m-auto h-full max-w-screen-xl px-6">
+        <div className="m-auto max-w-md pt-8 md:pt-24">
           <div className="mb-5 flex max-w-md flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-2">
               <NextLogo width="42" height="42" />
@@ -127,14 +127,17 @@ function SignIn({ onChange }: SignProps) {
         description="We'll never share your password with anyone else too."
         onValueChange={setPassword}
       />
-      <Checkbox
-        color="warning"
-        size="sm"
-        isSelected={remember}
-        onValueChange={setRemember}
-      >
-        Remember me
-      </Checkbox>
+      <div className="flex items-center justify-between">
+        <Checkbox
+          color="warning"
+          size="sm"
+          isSelected={remember}
+          onValueChange={setRemember}
+        >
+          Remember me
+        </Checkbox>
+        <Link size="sm">Sign in with Email</Link>
+      </div>
       <p className="text-center text-small">
         Need to create an account?{" "}
         <Link size="sm" onPress={onChange}>

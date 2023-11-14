@@ -9,8 +9,6 @@ import { env } from "@/env.mjs";
 
 const connection = getRedisInstance();
 
-console.log(env.SMTP_PASSWORD);
-
 const transport = createTransport({
   pool: true,
   host: env.SMTP_HOST,
@@ -43,7 +41,6 @@ const mailerQuene = new Queue<SendMailOptions, SentMessageInfo, "email">(
 const mailerWorker = new Worker<SendMailOptions, SentMessageInfo, "email">(
   "mailerQuene",
   async (job) => {
-    console.log(job);
     const { to, subject, text, html, attachments } = job.data;
     const info = await transport.sendMail({
       from: env.EMAIL_FROM,

@@ -46,6 +46,7 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/eslint": "^8.44.7",
+    "@types/lodash": "^4.14.201",
     "@types/node": "^20.9.0",
     "@types/nodemailer": "^6.4.14",
     "@types/react": "^18.2.37",
