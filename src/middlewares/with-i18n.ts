@@ -1,5 +1,5 @@
 import createMiddleware from "next-intl/middleware";
-import { pathnames, locales } from "@/navigation";
+import { pathnames, locales } from "@/config";
 
 import type { MiddlewareFactory } from "./types";
 

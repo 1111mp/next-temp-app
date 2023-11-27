@@ -6,8 +6,9 @@ import { Navbar } from "@/components/navbar";
 import { CreatePost } from "@/components/create-post";
 
 import { api } from "@/trpc/server";
-import { locales } from "@/navigation";
+import { locales } from "@/config";
 import { getServerActionSession } from "@/lib/session";
+import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 
 type Props = {
   params: { locale: string };
@@ -32,6 +33,7 @@ export default async function IndexPage({ params: { locale } }: Props) {
       {/* https://github.com/vercel/next.js/issues/49427 */}
       <div></div>
       <Navbar user={session.user!} />
+      <LocaleSwitcher />
       <div className="m-auto max-w-screen-xl px-6">
         <h1>{t("title")}</h1>
         <div className="h-[1000px]">

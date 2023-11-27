@@ -34,7 +34,7 @@ const getSession = async (
     req,
     res,
     merge(sessionOptions, options),
-  );
+      );
   return session;
 };
 

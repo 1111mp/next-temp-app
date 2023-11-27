@@ -5,7 +5,7 @@ import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/navigation";
 
 type Props = {
-  onClose: () => void;
+  onClose?: () => void;
 };
 
 export function LocaleSwitcher({ onClose }: Props) {
@@ -21,11 +21,11 @@ export function LocaleSwitcher({ onClose }: Props) {
   ) => {
     onClose?.();
     const nextLocale = event.target.value;
-    setTimeout(() => {
-      startTransition(() => {
-        router.replace(pathname, { locale: nextLocale });
-      });
-    }, 200);
+    // setTimeout(() => {
+    startTransition(() => {
+      router.replace(pathname, { locale: nextLocale });
+    });
+    // }, 800);
   };
 
   return (

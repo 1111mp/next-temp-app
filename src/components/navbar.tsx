@@ -22,7 +22,7 @@ import {
 import { User } from "@nextui-org/user";
 import { NextLogo } from "./next-logo";
 import { useTheme } from "next-themes";
-import { LocaleSwitcher } from "./LocaleSwitcher";
+// import { LocaleSwitcher } from "./LocaleSwitcher";
 import { useRouter } from "@/navigation";
 
 import type { SessionUser } from "@/lib/session";
@@ -167,13 +167,13 @@ export function Navbar({ user }: Props) {
             </DropdownSection>
 
             <DropdownSection aria-label="Preferences" showDivider>
-              <DropdownItem
+              {/* <DropdownItem
                 isReadOnly
                 key="language"
                 endContent={<LocaleSwitcher onClose={() => setIsOpen(false)} />}
               >
                 Language
-              </DropdownItem>
+              </DropdownItem> */}
               <DropdownItem
                 isReadOnly
                 key="theme"

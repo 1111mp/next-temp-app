@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
 import { TRPCReactProvider } from "@/trpc/react";
 import { ThemeProviders } from "@/app/theme-provider";
-import { locales } from "@/navigation";
+import { locales } from "@/config";
 import { Toaster } from "react-hot-toast";
 
 type Props = {
@@ -18,7 +18,7 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params: { locale },
 }: Omit<Props, "children">) {
-  const t = await getTranslations();
+  const t = await getTranslations({ locale });
 
   return {
     title: t("title"),
@@ -27,10 +27,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function LocaleLayout({
-  children,
-  params: { locale },
-}: Props) {
+export default function LocaleLayout({ children, params: { locale } }: Props) {
   // Validate that the incoming `locale` parameter is valid
   if (!locales.includes(locale as any)) notFound();
 
