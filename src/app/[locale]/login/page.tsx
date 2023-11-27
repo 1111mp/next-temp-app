@@ -9,7 +9,7 @@ import { EyeFilledIcon, EyeSlashFilledIcon } from "@/components/eyes-icon";
 import { NextLogo } from "@/components/next-logo";
 import { useRouter } from "@/navigation";
 import { Link } from "@nextui-org/link";
-import { SignInInput, SignUpInput } from "@/utils/user-validate";
+import { MailerInput, SignInInput, SignUpInput } from "@/utils/user-validate";
 import { toast } from "@/components/toast";
 
 type Props = {
@@ -61,34 +61,68 @@ type SignProps = {
   onChange: VoidFunction;
 };
 
+enum SignInType {
+  Normal,
+  Email,
+}
+
 function SignIn({ onChange }: SignProps) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [type, setType] = useState<SignInType>(SignInType.Normal);
   const [remember, setRemember] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const router = useRouter();
 
+  const onChangeType = () => {
+    setType(type === SignInType.Normal ? SignInType.Email : SignInType.Normal);
+  };
+
   const onSubmit: React.FormEventHandler<HTMLFormElement> = async (evt) => {
     evt.preventDefault();
 
-    const validate = await SignInInput.spa({ email, password, remember });
-    if (!validate.success) {
-      const [error] = validate.error.issues;
-      return toast.error(error?.message!);
-    }
+    switch (type) {
+      case SignInType.Normal: {
+        const validate = await SignInInput.spa({ email, password, remember });
+        if (!validate.success) {
+          const [error] = validate.error.issues;
+          return toast.error(error?.message!);
+        }
 
-    const ret = await fetch("/api/auth/signin", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(validate.data),
-    }).then((resp) => resp.json());
-    if (ret.code !== 200) {
-      return toast.error(ret.message);
+        const ret = await fetch("/api/auth/signin", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(validate.data),
+        }).then((resp) => resp.json());
+        if (ret.code !== 200) {
+          return toast.error(ret.message);
+        }
+        return router.replace("/");
+      }
+      case SignInType.Email: {
+        const validate = await MailerInput.spa({ email, remember });
+        if (!validate.success) {
+          const [error] = validate.error.issues;
+          return toast.error(error?.message!);
+        }
+
+        const ret = await fetch("/api/auth/mailer", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(validate.data),
+        }).then((resp) => resp.json());
+        if (ret.code !== 200) {
+          return toast.error(ret.message);
+        }
+
+        return toast.success(ret.message);
+      }
     }
-    router.replace("/");
   };
 
   return (
@@ -104,29 +138,31 @@ function SignIn({ onChange }: SignProps) {
         onClear={() => setEmail("")}
         onValueChange={setEmail}
       />
-      <Input
-        size="sm"
-        isRequired
-        label="Password"
-        value={password}
-        placeholder="Enter your password"
-        type={isVisible ? "text" : "password"}
-        endContent={
-          <button
-            className="focus:outline-none"
-            type="button"
-            onClick={() => setIsVisible(!isVisible)}
-          >
-            {isVisible ? (
-              <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
-            ) : (
-              <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
-            )}
-          </button>
-        }
-        description="We'll never share your password with anyone else too."
-        onValueChange={setPassword}
-      />
+      {type === SignInType.Normal ? (
+        <Input
+          size="sm"
+          isRequired
+          label="Password"
+          value={password}
+          placeholder="Enter your password"
+          type={isVisible ? "text" : "password"}
+          endContent={
+            <button
+              className="focus:outline-none"
+              type="button"
+              onClick={() => setIsVisible(!isVisible)}
+            >
+              {isVisible ? (
+                <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
+              ) : (
+                <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
+              )}
+            </button>
+          }
+          description="We'll never share your password with anyone else too."
+          onValueChange={setPassword}
+        />
+      ) : null}
       <div className="flex items-center justify-between">
         <Checkbox
           color="warning"
@@ -136,7 +172,11 @@ function SignIn({ onChange }: SignProps) {
         >
           Remember me
         </Checkbox>
-        <Link size="sm">Sign in with Email</Link>
+        <Link size="sm" onPress={onChangeType}>
+          {type === SignInType.Normal
+            ? "Sign in with Email"
+            : "Sign in with Password"}
+        </Link>
       </div>
       <p className="text-center text-small">
         Need to create an account?{" "}

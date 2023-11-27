@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
-import { useTranslations } from "next-intl";
-import { unstable_setRequestLocale } from "next-intl/server";
+import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
 
 import { Button } from "@nextui-org/button";
 import { Navbar } from "@/components/navbar";
@@ -8,12 +7,13 @@ import { CreatePost } from "@/components/create-post";
 
 import { api } from "@/trpc/server";
 import { locales } from "@/navigation";
+import { getServerActionSession } from "@/lib/session";
 
 type Props = {
   params: { locale: string };
 };
 
-export default function IndexPage({ params: { locale } }: Props) {
+export default async function IndexPage({ params: { locale } }: Props) {
   // Validate that the incoming `locale` parameter is valid
   const isValidLocale = locales.some((cur) => cur === locale);
   if (!isValidLocale) notFound();
@@ -21,13 +21,17 @@ export default function IndexPage({ params: { locale } }: Props) {
   // Enable static rendering
   unstable_setRequestLocale(locale);
 
-  const t = useTranslations("Index");
+  const t = await getTranslations("Index");
   //
   // const hello = await api.post.hello.query({ text: "from tRPC" });
 
+  const session = await getServerActionSession();
+
   return (
     <>
-      <Navbar />
+      {/* https://github.com/vercel/next.js/issues/49427 */}
+      <div></div>
+      <Navbar user={session.user!} />
       <div className="m-auto max-w-screen-xl px-6">
         <h1>{t("title")}</h1>
         <div className="h-[1000px]">

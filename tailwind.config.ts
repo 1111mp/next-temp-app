@@ -6,7 +6,7 @@ import type { Config } from "tailwindcss";
 export default {
   content: [
     "./src/**/*.tsx",
-    "./node_modules/@nextui-org/theme/dist/components/(button|checkbox|input|link|navbar|spinner|tabs).js",
+    "./node_modules/@nextui-org/theme/dist/components/(avatar|button|checkbox|divider|dropdown|input|link|navbar|popover|select|spinner|tabs|user).js",
   ],
   darkMode: "class",
   theme: {

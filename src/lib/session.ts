@@ -6,10 +6,12 @@ import { merge } from "lodash";
 import type { IronSessionData, IronSessionOptions } from "iron-session";
 import type { User } from "@prisma/client";
 
+export type SessionUser = Omit<User, "password">;
+
 // This is where we specify the typings of req.session.*
 declare module "iron-session" {
   interface IronSessionData {
-    user?: Omit<User, "password">;
+    user?: SessionUser;
   }
 }
 
@@ -28,7 +30,6 @@ const getSession = async (
   res: Response,
   options?: Partial<IronSessionOptions>,
 ) => {
-  console.log(merge(sessionOptions, options));
   const session = getIronSession<IronSessionData>(
     req,
     res,
