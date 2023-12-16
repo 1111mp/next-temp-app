@@ -6,7 +6,6 @@ import {
 import { getServerActionSession } from "@/lib/session";
 
 import type { MiddlewareFactory } from "./types";
-import { redirect } from "@/navigation";
 
 export const withAuthorization: MiddlewareFactory = (next) => {
   return async (req: NextRequest, _next: NextFetchEvent) => {

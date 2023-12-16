@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "@/navigation";
+import { Button } from "@nextui-org/button";
 import { api } from "@/trpc/react";
 
 export function CreatePost() {
@@ -43,6 +44,16 @@ export function CreatePost() {
           {createPost.isLoading ? "Submitting..." : "Submit"}
         </button>
       </form>
+
+      <Button
+        color="primary"
+        size="sm"
+        onPress={() => {
+          router.push("/login");
+        }}
+      >
+        Presss me
+      </Button>
     </>
   );
 }

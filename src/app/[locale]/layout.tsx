@@ -1,10 +1,7 @@
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
-import { TRPCReactProvider } from "@/trpc/react";
-import { ThemeProviders } from "@/app/theme-provider";
+import { NextUIProvider } from "./nextui-provider";
 import { locales } from "@/config";
-import { Toaster } from "react-hot-toast";
 
 type Props = {
   children: React.ReactNode;
@@ -34,14 +31,5 @@ export default function LocaleLayout({ children, params: { locale } }: Props) {
   // Enable static rendering
   unstable_setRequestLocale(locale);
 
-  return (
-    <html lang={locale} suppressHydrationWarning className="h-full w-full">
-      <body className="h-full w-full">
-        <TRPCReactProvider headers={headers()}>
-          <ThemeProviders>{children}</ThemeProviders>
-        </TRPCReactProvider>
-        <Toaster />
-      </body>
-    </html>
-  );
+  return <NextUIProvider>{children}</NextUIProvider>;
 }

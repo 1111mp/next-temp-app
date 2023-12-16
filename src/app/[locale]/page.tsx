@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
 
-import { Button } from "@nextui-org/button";
 import { Navbar } from "@/components/navbar";
 import { CreatePost } from "@/components/create-post";
 
@@ -33,8 +32,8 @@ export default async function IndexPage({ params: { locale } }: Props) {
       {/* https://github.com/vercel/next.js/issues/49427 */}
       <div></div>
       <Navbar user={session.user!} />
-      <LocaleSwitcher />
       <div className="m-auto max-w-screen-xl px-6">
+        <LocaleSwitcher />
         <h1>{t("title")}</h1>
         <div className="h-[1000px]">
           {/* <div className={styles.showcaseContainer}>
@@ -63,10 +62,6 @@ async function CrudShowcase() {
       ) : (
         <p className="showcaseText">You have no posts yet.</p>
       )}
-
-      <Button color="primary" size="sm">
-        Press me
-      </Button>
 
       <CreatePost />
     </div>
