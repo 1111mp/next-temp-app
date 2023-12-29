@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "@/navigation";
 import { Button } from "@nextui-org/button";
+import { toast } from "./toast";
+
 import { api } from "@/trpc/react";
+import { PostCreationInput } from "@/validates/post-validate";
 
 export function CreatePost() {
   const router = useRouter();
@@ -15,16 +18,24 @@ export function CreatePost() {
       router.refresh();
       setName("");
     },
+    onError(err) {
+      console.log(err);
+    },
   });
 
   return (
     <>
-      <form action="/api/auth/signout" method="post">
-        <button type="submit">Sign out</button>
-      </form>
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
+        onSubmit={async (evt) => {
+          evt.preventDefault();
+          const validate = await PostCreationInput.spa({
+            name,
+            description: desc,
+          });
+          if (!validate.success) {
+            const [error] = validate.error.issues;
+            return toast.error(error?.message!);
+          }
           createPost.mutate({ name, description: desc });
         }}
       >

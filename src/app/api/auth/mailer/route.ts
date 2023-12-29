@@ -6,7 +6,7 @@ import {
   MakeNextJsonResponse,
   UnauthorizedException,
 } from "@/utils/http-exception";
-import { MailerInput } from "@/utils/user-validate";
+import { MailerInput } from "@/validates/user-validate";
 import { env } from "@/env.mjs";
 
 export async function POST(req: Request) {

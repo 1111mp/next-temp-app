@@ -1,5 +1,6 @@
 {
   "name": "next-temp-app",
+  "description": "A template to start a full-stack, typesafe Next.js app.",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -71,5 +72,5 @@
   "ct3aMetadata": {
     "initVersion": "7.22.0"
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@1.22.21|pnpm@8.12.1"
 }

@@ -8,7 +8,7 @@ import {
   BadGatewayException,
   MakeNextRedirectResponse,
 } from "@/utils/http-exception";
-import { SignInInput } from "@/utils/user-validate";
+import { SignInInput } from "@/validates/user-validate";
 import { unsealData } from "iron-session";
 
 import type { NextRequest } from "next/server";

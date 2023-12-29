@@ -8,7 +8,7 @@
       "type": "node",
       "request": "launch",
       "name": "Debug",
-      "runtimeExecutable": "yarn",
+      "runtimeExecutable": "pnpm",
       "runtimeArgs": ["run", "dev"]
     }
   ]

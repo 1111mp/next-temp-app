@@ -7,7 +7,7 @@ import {
   InternalServerErrorException,
   MakeNextJsonResponse,
 } from "@/utils/http-exception";
-import { SignUpInput } from "@/utils/user-validate";
+import { SignUpInput } from "@/validates/user-validate";
 
 export async function POST(req: Request) {
   const validate = await SignUpInput.spa(await req.json());

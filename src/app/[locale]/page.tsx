@@ -7,7 +7,6 @@ import { CreatePost } from "@/components/create-post";
 import { api } from "@/trpc/server";
 import { locales } from "@/config";
 import { getServerActionSession } from "@/lib/session";
-import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 
 type Props = {
   params: { locale: string };
@@ -33,17 +32,8 @@ export default async function IndexPage({ params: { locale } }: Props) {
       <div></div>
       <Navbar user={session.user!} />
       <div className="m-auto max-w-screen-xl px-6">
-        <LocaleSwitcher />
         <h1>{t("title")}</h1>
-        <div className="h-[1000px]">
-          {/* <div className={styles.showcaseContainer}>
-          <p className={styles.showcaseText}>
-            {hello ? hello.greeting : "Loading tRPC query..."}
-          </p>
-        </div> */}
-
-          <CrudShowcase />
-        </div>
+        <CrudShowcase />
       </div>
     </>
   );

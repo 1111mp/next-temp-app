@@ -9,7 +9,7 @@ import { EyeFilledIcon, EyeSlashFilledIcon } from "@/components/eyes-icon";
 import { NextLogo } from "@/components/next-logo";
 import { useRouter } from "@/navigation";
 import { Link } from "@nextui-org/link";
-import { MailerInput, SignInInput, SignUpInput } from "@/utils/user-validate";
+import { MailerInput, SignInInput, SignUpInput } from "@/validates/user-validate";
 import { toast } from "@/components/toast";
 
 type Props = {

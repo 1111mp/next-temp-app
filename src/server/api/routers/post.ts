@@ -5,6 +5,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
+import { PostCreationInput } from "@/validates/post-validate";
 
 export const postRouter = createTRPCRouter({
   hello: publicProcedure
@@ -16,11 +17,8 @@ export const postRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(
-      z.object({ name: z.string().min(1), description: z.string().min(1) })
-    )
+    .input(PostCreationInput)
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
       return ctx.db.post.create({
         data: {
           userId: ctx.session.user.id,

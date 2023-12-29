@@ -14,18 +14,16 @@ export function LocaleSwitcher({ onClose }: Props) {
   const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
 
-  console.log(locale);
-
   const onSelectChange: React.ChangeEventHandler<HTMLSelectElement> = (
     event,
   ) => {
     onClose?.();
     const nextLocale = event.target.value;
-    // setTimeout(() => {
-    startTransition(() => {
-      router.replace(pathname, { locale: nextLocale });
-    });
-    // }, 800);
+    setTimeout(() => {
+      startTransition(() => {
+        router.replace(pathname, { locale: nextLocale });
+      });
+    }, 300);
   };
 
   return (
