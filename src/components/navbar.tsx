@@ -115,12 +115,24 @@ export function Navbar({ user }: Props) {
           onOpenChange={(open) => setIsOpen(open)}
         >
           <DropdownTrigger>
-            <Avatar
+            {/* <Avatar
               size="sm"
-              as="button"
+              // as="button"
               name={name}
               className="transition-transform"
               src="https://avatars.githubusercontent.com/u/30373425?v=4"
+            /> */}
+            <User
+              name=""
+              // description={email}
+              // classNames={{
+                // name: "transition-transform",
+                // description: "text-default-500",
+              // }}
+              avatarProps={{
+                size: "sm",
+                src: "https://avatars.githubusercontent.com/u/30373425?v=4",
+              }}
             />
           </DropdownTrigger>
           <DropdownMenu

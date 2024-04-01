@@ -51,8 +51,8 @@ export function CreatePost() {
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
         />
-        <button type="submit" disabled={createPost.isLoading}>
-          {createPost.isLoading ? "Submitting..." : "Submit"}
+        <button type="submit" disabled={createPost.isPending}>
+          {createPost.isPending ? "Submitting..." : "Submit"}
         </button>
       </form>
 

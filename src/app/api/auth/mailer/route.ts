@@ -32,7 +32,7 @@ export async function POST(req: Request) {
   await sendMail({
     to: user.email,
     subject: "[next-temp-app]: Sign in with your email",
-    html: `Hey there ${user.name}, <a href="http://192.168.0.8:3000/api/auth/signin?seal=${seal}">click here to login</a>.`,
+    html: `Hey there ${user.name}, <a href="http://192.168.0.8:3000/api/auth/login?seal=${seal}">click here to login</a>.`,
   });
 
   return MakeNextJsonResponse({

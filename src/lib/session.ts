@@ -1,9 +1,8 @@
-import { getIronSession, getServerActionIronSession } from "iron-session";
+import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { env } from "@/env.mjs";
-import { merge } from "lodash";
 
-import type { IronSessionData, IronSessionOptions } from "iron-session";
+import type { IronSessionData, SessionOptions } from "iron-session";
 import type { User } from "@prisma/client";
 
 export type SessionUser = Omit<User, "password">;
@@ -15,7 +14,7 @@ declare module "iron-session" {
   }
 }
 
-const sessionOptions: IronSessionOptions = {
+const sessionOptions: SessionOptions = {
   password: env.APP_RANDOM_PASSWORD,
   cookieName: env.APP_AUTH_KEY,
   // secure: true should be used in production (HTTPS) but can't be used in development (HTTP)
@@ -28,21 +27,17 @@ const sessionOptions: IronSessionOptions = {
 const getSession = async (
   req: Request,
   res: Response,
-  options?: Partial<IronSessionOptions>,
+  options?: Partial<SessionOptions>,
 ) => {
-  const session = getIronSession<IronSessionData>(
-    req,
-    res,
-    merge(sessionOptions, options),
-      );
+  const session = getIronSession<IronSessionData>(req, res, {
+    ...sessionOptions,
+    ...options,
+  });
   return session;
 };
 
 const getServerActionSession = async () => {
-  const session = getServerActionIronSession<IronSessionData>(
-    sessionOptions,
-    cookies(),
-  );
+  const session = getIronSession<IronSessionData>(cookies(), sessionOptions);
   return session;
 };
 

@@ -40,7 +40,7 @@ export default async function IndexPage({ params: { locale } }: Props) {
 }
 
 async function CrudShowcase() {
-  const latestPost = await api.post.getLatest.query().catch((err) => {
+  const latestPost = await api.post.getLatest().catch((err) => {
     console.log("err===>>>", err);
   });
   console.log("latestPost", latestPost);

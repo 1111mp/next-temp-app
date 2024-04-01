@@ -9,7 +9,11 @@ import { EyeFilledIcon, EyeSlashFilledIcon } from "@/components/eyes-icon";
 import { NextLogo } from "@/components/next-logo";
 import { useRouter } from "@/navigation";
 import { Link } from "@nextui-org/link";
-import { MailerInput, SignInInput, SignUpInput } from "@/validates/user-validate";
+import {
+  MailerInput,
+  LoginInput,
+  SignUpInput,
+} from "@/validates/user-validate";
 import { toast } from "@/components/toast";
 
 type Props = {
@@ -84,13 +88,13 @@ function SignIn({ onChange }: SignProps) {
 
     switch (type) {
       case SignInType.Normal: {
-        const validate = await SignInInput.spa({ email, password, remember });
+        const validate = await LoginInput.spa({ email, password, remember });
         if (!validate.success) {
           const [error] = validate.error.issues;
           return toast.error(error?.message!);
         }
 
-        const ret = await fetch("/api/auth/signin", {
+        const ret = await fetch("/api/auth/login", {
           method: "POST",
           headers: {
             "content-type": "application/json",
