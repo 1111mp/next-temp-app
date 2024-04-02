@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "@/navigation";
+import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { toast } from "./toast";
 
 import { api } from "@/trpc/react";
+import { useRouter } from "@/navigation";
 import { PostCreationInput } from "@/validates/post-validate";
 
 export function CreatePost() {
@@ -39,32 +40,22 @@ export function CreatePost() {
           createPost.mutate({ name, description: desc });
         }}
       >
-        <input
+        <Input
           type="text"
           placeholder="Title"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <input
+        <Input
           type="text"
           placeholder="Description"
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
         />
-        <button type="submit" disabled={createPost.isPending}>
+        <Button color="primary" type="submit" disabled={createPost.isPending}>
           {createPost.isPending ? "Submitting..." : "Submit"}
-        </button>
+        </Button>
       </form>
-
-      <Button
-        color="primary"
-        size="sm"
-        onPress={() => {
-          router.push("/login");
-        }}
-      >
-        Presss me
-      </Button>
     </>
   );
 }

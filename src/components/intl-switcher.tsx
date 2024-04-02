@@ -1,29 +1,21 @@
 "use client";
 
-import { useTransition } from "react";
+import { startTransition } from "react";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/navigation";
 
-type Props = {
-  onClose?: () => void;
-};
-
-export function LocaleSwitcher({ onClose }: Props) {
+export function IntlSwitcher() {
   const locale = useLocale();
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
 
   const onSelectChange: React.ChangeEventHandler<HTMLSelectElement> = (
     event,
   ) => {
-    onClose?.();
     const nextLocale = event.target.value;
-    setTimeout(() => {
-      startTransition(() => {
-        router.replace(pathname, { locale: nextLocale });
-      });
-    }, 300);
+    startTransition(() => {
+      router.replace(pathname, { locale: nextLocale });
+    });
   };
 
   return (

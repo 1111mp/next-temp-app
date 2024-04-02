@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Avatar } from "@nextui-org/avatar";
 import {
   Dropdown,
   DropdownItem,
@@ -22,7 +21,7 @@ import {
 import { User } from "@nextui-org/user";
 import { NextLogo } from "./next-logo";
 import { useTheme } from "next-themes";
-import { LocaleSwitcher } from "./LocaleSwitcher";
+import { IntlSwitcher } from "./intl-switcher";
 import { useRouter } from "@/navigation";
 
 import type { SessionUser } from "@/lib/session";
@@ -52,7 +51,6 @@ enum Theme {
 
 export function Navbar({ user }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { theme, setTheme } = useTheme();
   const router = useRouter();
@@ -108,12 +106,7 @@ export function Navbar({ user }: Props) {
       </NavbarContent>
 
       <NavbarContent as="div" justify="end">
-        <Dropdown
-          isOpen={isOpen}
-          radius="sm"
-          placement="bottom-end"
-          onOpenChange={(open) => setIsOpen(open)}
-        >
+        <Dropdown radius="sm" placement="bottom-end">
           <DropdownTrigger>
             {/* <Avatar
               size="sm"
@@ -126,8 +119,8 @@ export function Navbar({ user }: Props) {
               name=""
               // description={email}
               // classNames={{
-                // name: "transition-transform",
-                // description: "text-default-500",
+              // name: "transition-transform",
+              // description: "text-default-500",
               // }}
               avatarProps={{
                 size: "sm",
@@ -182,7 +175,7 @@ export function Navbar({ user }: Props) {
               <DropdownItem
                 isReadOnly
                 key="language"
-                endContent={<LocaleSwitcher onClose={() => setIsOpen(false)} />}
+                endContent={<IntlSwitcher />}
               >
                 Language
               </DropdownItem>

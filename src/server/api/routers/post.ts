@@ -19,6 +19,7 @@ export const postRouter = createTRPCRouter({
   create: protectedProcedure
     .input(PostCreationInput)
     .mutation(async ({ ctx, input }) => {
+      console.log(ctx.session.user);
       return ctx.db.post.create({
         data: {
           userId: ctx.session.user.id,
