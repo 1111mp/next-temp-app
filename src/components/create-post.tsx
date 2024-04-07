@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Input } from "@nextui-org/input";
+import { Input } from "@/components/ui";
 import { Button } from "@nextui-org/button";
 import { toast } from "./toast";
 
@@ -18,6 +18,7 @@ export function CreatePost() {
     onSuccess: () => {
       router.refresh();
       setName("");
+      setDesc("");
     },
     onError(err) {
       console.log(err);
@@ -27,6 +28,7 @@ export function CreatePost() {
   return (
     <>
       <form
+        className="space-y-2"
         onSubmit={async (evt) => {
           evt.preventDefault();
           const validate = await PostCreationInput.spa({

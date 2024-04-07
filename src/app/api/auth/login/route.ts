@@ -14,7 +14,7 @@ import { unsealData } from "iron-session";
 import type { NextRequest } from "next/server";
 import type { User } from "@prisma/client";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const validate = await LoginInput.spa(await req.json());
   if (!validate.success) {
     const [error] = validate.error.issues;
@@ -22,21 +22,24 @@ export async function POST(req: Request) {
   }
 
   const { email, password, remember } = validate.data;
-  const user = await db.user.signIn({ email, password });
-  if (!user) return UnauthorizedException("Invalid account or password");
+  // const user = await db.user.signIn({ email, password });
+  // if (!user) return UnauthorizedException("Invalid account or password");
 
   const resp = MakeNextJsonResponse({
     code: 200,
-    data: user,
+    data: {
+      id: 1,
+      email,
+    },
     message: "Successful",
   });
-  const session = await getSession(
-    req,
-    resp,
-    remember ? undefined : { cookieOptions: { maxAge: undefined } },
-  );
-  session.user = user;
-  await session.save();
+  // const session = await getSession(
+  //   req,
+  //   resp,
+  //   remember ? undefined : { cookieOptions: { maxAge: undefined } },
+  // );
+  // session.user = user;
+  // await session.save();
 
   return resp;
 }
@@ -52,10 +55,11 @@ export async function GET(req: NextRequest) {
     password: env.APP_RANDOM_PASSWORD,
   });
   const resp = MakeNextRedirectResponse(new URL("/", req.nextUrl));
-  const session = await getSession(req, resp, {
-    // 14 days
-    ttl: remember ? 1209600 : 60,
-  });
+  const session = await getSession(
+    req,
+    resp,
+    remember ? undefined : { cookieOptions: { maxAge: undefined } },
+  );
   session.user = user;
   await session.save();
 
