@@ -22,24 +22,21 @@ export async function POST(req: NextRequest) {
   }
 
   const { email, password, remember } = validate.data;
-  // const user = await db.user.signIn({ email, password });
-  // if (!user) return UnauthorizedException("Invalid account or password");
+  const user = await db.user.signIn({ email, password });
+  if (!user) return UnauthorizedException("Invalid account or password");
 
   const resp = MakeNextJsonResponse({
     code: 200,
-    data: {
-      id: 1,
-      email,
-    },
+    data: user,
     message: "Successful",
   });
-  // const session = await getSession(
-  //   req,
-  //   resp,
-  //   remember ? undefined : { cookieOptions: { maxAge: undefined } },
-  // );
-  // session.user = user;
-  // await session.save();
+  const session = await getSession(
+    req,
+    resp,
+    remember ? undefined : { cookieOptions: { maxAge: undefined } },
+  );
+  session.user = user;
+  await session.save();
 
   return resp;
 }

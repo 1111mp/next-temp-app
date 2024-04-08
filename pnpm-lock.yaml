@@ -66,8 +66,8 @@ dependencies:
     specifier: ^5.1.1
     version: 5.1.1
   bullmq:
-    specifier: ^5.5.3
-    version: 5.5.3
+    specifier: ^5.5.4
+    version: 5.5.4
   dayjs:
     specifier: ^1.11.10
     version: 1.11.10
@@ -3195,8 +3195,8 @@ packages:
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
 
-  /bullmq@5.5.3:
-    resolution: {integrity: sha512-Tb08wJYL5VToC3VhAzHEknyOptCDvCyU/OlDOZrw9ainqpl6KUCFm9YvW+4+feeMc+hvCNEa26xG2ND/Yswbeg==}
+  /bullmq@5.5.4:
+    resolution: {integrity: sha512-qqZ8lZNfCzqV46zlIq0/4hzgCklhkXEeREeHPBJD2FAoNa7/Gwa9V4ySFX0rJv7B7U2buPrawkBQ1/7ATAu39A==}
     dependencies:
       cron-parser: 4.9.0
       ioredis: 5.3.2

@@ -1,11 +1,11 @@
 // @vitest-environment node
 
 import { describe, expect, test } from "vitest";
-import { POST as LoginHandler } from "@/app/api/auth/login/route";
-
 import { NextRequest } from "next/server";
+import { POST as LoginHandler } from "@/app/api/auth/login/route";
+import { env } from "@/env.mjs";
 
-describe("api login", () => {
+describe("apis: /api/auth", () => {
   test("/api/auth/login", async () => {
     const req = new NextRequest("http://127.0.0.1:3000", {
       method: "POST",
@@ -13,8 +13,8 @@ describe("api login", () => {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        email: "temp@gmail.com",
-        password: "password123",
+        email: env.TEST_USER_EMAIL,
+        password: env.TEST_USER_PASSWORD,
         remember: false,
       }),
     });
@@ -28,7 +28,8 @@ describe("api login", () => {
     expect(ret.code).toBe(200);
     expect(ret.data).toMatchObject({
       id: 1,
-      email: "temp@gmail.com",
+      name: env.TEST_USER_NAME,
+      email: env.TEST_USER_EMAIL,
     });
     expect(ret.message).toBe("Successful");
   });

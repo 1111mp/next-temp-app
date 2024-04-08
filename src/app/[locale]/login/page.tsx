@@ -94,15 +94,12 @@ function SignIn({ onChange }: SignProps) {
           return toast.error(error?.message!);
         }
 
-        const data = new FormData();
-        data.append("email", "The1111mp@gmail.com");
-
         const ret = await fetch("/api/auth/login", {
           method: "POST",
           headers: {
             "content-type": "application/json",
           },
-          body: data,
+          body: JSON.stringify(validate.data),
         }).then((resp) => resp.json());
         if (ret.code !== 200) {
           return toast.error(ret.message);
