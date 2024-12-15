@@ -1,24 +1,23 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Input } from "@/components/ui";
-import { Button } from "@nextui-org/button";
-import { toast } from "./toast";
+import { useState } from 'react';
+import { Button, Input } from '@/components/ui';
+import { toast } from 'sonner';
 
-import { api } from "@/trpc/react";
-import { useRouter } from "@/navigation";
-import { PostCreationInput } from "@/validates/post-validate";
+import { api } from '@/trpc/react';
+import { useRouter } from '@/i18n/routing';
+import { PostCreationInput } from '@/validates/post-validate';
 
 export function CreatePost() {
   const router = useRouter();
-  const [name, setName] = useState<string>("");
-  const [desc, setDesc] = useState<string>("");
+  const [name, setName] = useState<string>('');
+  const [desc, setDesc] = useState<string>('');
 
   const createPost = api.post.create.useMutation({
     onSuccess: () => {
       router.refresh();
-      setName("");
-      setDesc("");
+      setName('');
+      setDesc('');
     },
     onError(err) {
       console.log(err);
@@ -28,7 +27,7 @@ export function CreatePost() {
   return (
     <>
       <form
-        className="space-y-2"
+        className='space-y-2'
         onSubmit={async (evt) => {
           evt.preventDefault();
           const validate = await PostCreationInput.spa({
@@ -43,19 +42,19 @@ export function CreatePost() {
         }}
       >
         <Input
-          type="text"
-          placeholder="Title"
+          type='text'
+          placeholder='Title'
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
         <Input
-          type="text"
-          placeholder="Description"
+          type='text'
+          placeholder='Description'
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
         />
-        <Button color="primary" type="submit" disabled={createPost.isPending}>
-          {createPost.isPending ? "Submitting..." : "Submit"}
+        <Button color='primary' type='submit' disabled={createPost.isPending}>
+          {createPost.isPending ? 'Submitting...' : 'Submit'}
         </Button>
       </form>
     </>

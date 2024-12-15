@@ -1,11 +1,11 @@
-import { Queue, Worker } from "bullmq";
+import { Queue, Worker } from 'bullmq';
 import {
   createTransport,
   type SentMessageInfo,
   type SendMailOptions,
-} from "nodemailer";
-import { getRedisInstance } from "./redis";
-import { env } from "@/env.mjs";
+} from 'nodemailer';
+import { getRedisInstance } from './redis';
+import { env } from '@/env.js';
 
 const connection = getRedisInstance();
 
@@ -20,14 +20,14 @@ const transport = createTransport({
   },
 });
 
-const mailerQuene = new Queue<SendMailOptions, SentMessageInfo, "email">(
-  "mailerQuene",
+const mailerQuene = new Queue<SendMailOptions, SentMessageInfo, 'email'>(
+  'mailerQuene',
   {
     connection,
     defaultJobOptions: {
       attempts: 2,
       backoff: {
-        type: "exponential",
+        type: 'exponential',
         delay: 5000,
       },
       removeOnComplete: true,
@@ -38,8 +38,8 @@ const mailerQuene = new Queue<SendMailOptions, SentMessageInfo, "email">(
   },
 );
 
-const mailerWorker = new Worker<SendMailOptions, SentMessageInfo, "email">(
-  "mailerQuene",
+const mailerWorker = new Worker<SendMailOptions, SentMessageInfo, 'email'>(
+  'mailerQuene',
   async (job) => {
     const { to, subject, text, html, attachments } = job.data;
     const info = await transport.sendMail({
@@ -60,13 +60,13 @@ const mailerWorker = new Worker<SendMailOptions, SentMessageInfo, "email">(
 );
 
 // completed event
-mailerWorker.on("completed", ({ id, returnvalue }) => {
+mailerWorker.on('completed', ({ id, returnvalue }) => {
   console.log(`mailerWorker completed: ${id}`);
   console.log(returnvalue);
 });
 
 // failed event
-mailerWorker.on("failed", (job, error) => {
+mailerWorker.on('failed', (job, error) => {
   console.log(job);
   console.log(error);
 });
@@ -78,7 +78,7 @@ export function sendMail({
   html,
   attachments,
 }: SendMailOptions) {
-  return mailerQuene.add("email", {
+  return mailerQuene.add('email', {
     to,
     subject,
     text,

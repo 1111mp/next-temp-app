@@ -1,35 +1,47 @@
-import { notFound } from "next/navigation";
-import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
-import { NextUIProvider } from "./nextui-provider";
-import { locales } from "@/config";
+import { notFound } from 'next/navigation';
+import { NextIntlClientProvider } from 'next-intl';
+import {
+  getTranslations,
+  setRequestLocale,
+  getMessages,
+} from 'next-intl/server';
+import { routing } from '@/i18n/routing';
 
 type Props = {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 };
 
 export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
+  return routing.locales.map((locale) => ({ locale }));
 }
 
-export async function generateMetadata({
-  params: { locale },
-}: Omit<Props, "children">) {
+export async function generateMetadata({ params }: Omit<Props, 'children'>) {
+  const { locale } = await params;
   const t = await getTranslations({ locale });
 
   return {
-    title: t("title"),
-    description: t("description"),
-    icons: [{ rel: "icon", url: "/favicon.ico" }],
+    title: t('title'),
+    description: t('description'),
+    icons: [{ rel: 'icon', url: '/favicon.ico' }],
   };
 }
 
-export default function LocaleLayout({ children, params: { locale } }: Props) {
+export default async function LocaleLayout({ children, params }: Props) {
+  const { locale } = await params;
   // Validate that the incoming `locale` parameter is valid
-  if (!locales.includes(locale as any)) notFound();
+  if (!routing.locales.includes(locale as any)) notFound();
 
   // Enable static rendering
-  unstable_setRequestLocale(locale);
+  setRequestLocale(locale);
 
-  return <NextUIProvider>{children}</NextUIProvider>;
+  // Providing all messages to the client
+  // side is the easiest way to get started
+  const messages = await getMessages();
+
+  return (
+    <NextIntlClientProvider messages={messages}>
+      {children}
+    </NextIntlClientProvider>
+  );
 }

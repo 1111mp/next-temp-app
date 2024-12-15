@@ -1,13 +1,8 @@
-import createMiddleware from "next-intl/middleware";
-import { pathnames, locales } from "@/config";
+import createMiddleware from 'next-intl/middleware';
+import { routing } from '@/i18n/routing';
 
-import type { MiddlewareFactory } from "./types";
+import type { MiddlewareFactory } from './types';
 
 export const withI18n: MiddlewareFactory = () => {
-  return createMiddleware({
-    defaultLocale: "en",
-    locales,
-    pathnames,
-    localePrefix: "as-needed",
-  });
+  return createMiddleware(routing);
 };

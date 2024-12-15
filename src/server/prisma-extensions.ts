@@ -1,25 +1,25 @@
-import { Prisma } from "@prisma/client";
-import { compare, hash } from "bcrypt";
-import dayjs from "dayjs";
+import { Prisma } from '@prisma/client';
+import { compare, hash } from 'bcrypt';
+import dayjs from 'dayjs';
 
 export const PrismaExtensionTransformedField = Prisma.defineExtension(
   (prisma) =>
     prisma.$extends({
-      name: "prisma-extension-transformed-field",
+      name: 'prisma-extension-transformed-field',
       result: {
         $allModels: {
           createdAt: {
             // @ts-ignore
             needs: { createdAt: true },
             compute(model) {
-              return dayjs(model.createdAt).format("YYYY-MM-DD HH:mm:ss");
+              return dayjs(model.createdAt).format('YYYY-MM-DD HH:mm:ss');
             },
           },
           updatedAt: {
             // @ts-ignore
             needs: { updatedAt: true },
             compute(model) {
-              return dayjs(model.updatedAt).format("YYYY-MM-DD HH:mm:ss");
+              return dayjs(model.updatedAt).format('YYYY-MM-DD HH:mm:ss');
             },
           },
         },
@@ -29,7 +29,7 @@ export const PrismaExtensionTransformedField = Prisma.defineExtension(
 
 export const PrismaExtensionInstanceMethods = Prisma.defineExtension((prisma) =>
   prisma.$extends({
-    name: "prisma-extension-instance-methods",
+    name: 'prisma-extension-instance-methods',
     result: {
       user: {
         save: {
@@ -60,12 +60,12 @@ export const PrismaExtensionInstanceMethods = Prisma.defineExtension((prisma) =>
 
 export const PrismaExtensionStaticMethods = Prisma.defineExtension((prisma) =>
   prisma.$extends({
-    name: "prisma-extension-static-methods",
+    name: 'prisma-extension-static-methods',
     model: {
       $allModels: {
         async exists<T>(
           this: T,
-          where: Prisma.Args<T, "findFirst">["where"],
+          where: Prisma.Args<T, 'findFirst'>['where'],
         ): Promise<boolean> {
           const context = Prisma.getExtensionContext(this);
           const result = await (context as any).findFirst({ where });
@@ -86,7 +86,7 @@ export const PrismaExtensionStaticMethods = Prisma.defineExtension((prisma) =>
           });
         },
 
-        async signIn(args: Pick<Prisma.UserCreateInput, "email" | "password">) {
+        async signIn(args: Pick<Prisma.UserCreateInput, 'email' | 'password'>) {
           const { email, password } = args;
           const user = await prisma.user.findFirst({
             where: { email },
@@ -95,7 +95,7 @@ export const PrismaExtensionStaticMethods = Prisma.defineExtension((prisma) =>
           if (user === null) return null;
 
           const same = await compare(password, user.password);
-          return same ? exclude(user, ["password"]) : null;
+          return same ? exclude(user, ['password']) : null;
         },
 
         async mailer(email: string) {
@@ -105,7 +105,7 @@ export const PrismaExtensionStaticMethods = Prisma.defineExtension((prisma) =>
 
           if (user === null) return null;
 
-          return exclude(user, ["password"]);
+          return exclude(user, ['password']);
         },
       },
     },

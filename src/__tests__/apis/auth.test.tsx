@@ -1,16 +1,16 @@
 // @vitest-environment node
 
-import { describe, expect, test } from "vitest";
-import { NextRequest } from "next/server";
-import { POST as LoginHandler } from "@/app/api/auth/login/route";
-import { env } from "@/env.mjs";
+import { describe, expect, test } from 'vitest';
+import { NextRequest } from 'next/server';
+import { POST as LoginHandler } from '@/app/api/auth/login/route';
+import { env } from '@/env.js';
 
-describe("apis: /api/auth", () => {
-  test("/api/auth/login", async () => {
-    const req = new NextRequest("http://127.0.0.1:3000", {
-      method: "POST",
+describe('apis: /api/auth', () => {
+  test('/api/auth/login', async () => {
+    const req = new NextRequest('http://127.0.0.1:3000', {
+      method: 'POST',
       headers: {
-        "content-type": "application/json",
+        'content-type': 'application/json',
       },
       body: JSON.stringify({
         email: env.TEST_USER_EMAIL,
@@ -31,6 +31,6 @@ describe("apis: /api/auth", () => {
       name: env.TEST_USER_NAME,
       email: env.TEST_USER_EMAIL,
     });
-    expect(ret.message).toBe("Successful");
+    expect(ret.message).toBe('successed');
   });
 });

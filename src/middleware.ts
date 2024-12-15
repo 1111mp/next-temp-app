@@ -1,6 +1,6 @@
-import { stackMiddlewares } from "@/middlewares/stack-middlewares";
-import { withI18n } from "@/middlewares/with-i18n";
-import { withAuthorization } from "@/middlewares/with-authorization";
+import { stackMiddlewares } from '@/middlewares/stack-middlewares';
+import { withI18n } from '@/middlewares/with-i18n';
+import { withAuthorization } from '@/middlewares/with-authorization';
 
 export const config = {
   matcher: [
@@ -12,7 +12,7 @@ export const config = {
      * - favicon.ico (favicon file)
      * - _vercel
      */
-    "/((?!api|_next/static|_next/image|_vercel|favicon.ico|robots.txt).*)",
+    '/((?!api|_next/static|_next/image|_vercel|favicon.ico|robots.txt).*)',
   ],
 };
 

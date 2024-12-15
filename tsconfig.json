@@ -8,6 +8,7 @@
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
+    "useUnknownInCatchVariables": false,
 
     /* Strictness */
     "strict": true,
@@ -27,7 +28,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
   "include": [
     ".eslintrc.cjs",
@@ -37,7 +39,7 @@
     "**/*.cjs",
     "**/*.js",
     ".next/types/**/*.ts",
-    "vitest-setup.mts"
+    "vitest-setup.ts"
   ],
   "exclude": ["node_modules"]
 }

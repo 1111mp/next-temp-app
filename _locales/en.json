@@ -1,7 +1,11 @@
 {
-  "title": "next-temp-app",
-  "description": "A template to start a full-stack, typesafe Next.js app.",
-  "Index": {
-    "title": "Hello world!"
-  }
+	"title": "next-temp-app",
+	"description": "A template to start a full-stack, typesafe Next.js app.",
+	"Index": {
+		"title": "Hello world!"
+	},
+	"LoginPage": {
+		"Log-in": "Log in",
+		"Sign-up": "Sign up"
+	}
 }

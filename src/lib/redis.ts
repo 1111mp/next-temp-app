@@ -1,5 +1,5 @@
-import Redis, { type RedisOptions } from "ioredis";
-import { env } from "@/env.mjs";
+import Redis, { type RedisOptions } from 'ioredis';
+import { env } from '@/env.js';
 
 let redis: Redis | null = null;
 
@@ -9,7 +9,7 @@ export function getRedisInstance() {
 }
 
 function createRedisInstance() {
-  if (redis) throw new Error("[Redis] Cannot initialize more than once!");
+  if (redis) throw new Error('[Redis] Cannot initialize more than once!');
 
   try {
     const options: RedisOptions = {
@@ -33,13 +33,13 @@ function createRedisInstance() {
 
     redis = new Redis(options);
 
-    redis.on("error", (err) => {
-      console.warn("[Redis] Error connecting", err);
+    redis.on('error', (err) => {
+      console.warn('[Redis] Error connecting', err);
     });
 
-    redis.on("connect", () => {
+    redis.on('connect', () => {
       console.log(
-        `[Redis] Connected to redis on ${env.REDIS_HOST}:${env.REDIS_PORT}/${env.REDIS_DB}`
+        `[Redis] Connected to redis on ${env.REDIS_HOST}:${env.REDIS_PORT}/${env.REDIS_DB}`,
       );
     });
 
