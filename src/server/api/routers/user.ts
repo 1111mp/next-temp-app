@@ -111,7 +111,7 @@ export const userRouter = createTRPCRouter({
     }),
   // user logout
   logout: protectedProcedure.mutation(async ({ ctx }) => {
-    await ctx.session.destroy();
+    ctx.session.destroy();
 
     return {
       redirectTo: '/',

@@ -44,7 +44,7 @@ function createRedisInstance() {
     });
 
     return redis;
-  } catch (_err) {
+  } catch {
     if (redis) redis.disconnect();
     throw new Error(`[Redis] Could not create a Redis instance`);
   }
