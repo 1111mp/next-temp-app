@@ -1,22 +1,17 @@
 import { notFound } from 'next/navigation';
-import { NextIntlClientProvider } from 'next-intl';
-import {
-  getTranslations,
-  setRequestLocale,
-  getMessages,
-} from 'next-intl/server';
+import { hasLocale, NextIntlClientProvider } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 
-type Props = {
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-};
+import type { Metadata } from 'next';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-export async function generateMetadata({ params }: Omit<Props, 'children'>) {
+export async function generateMetadata({
+  params,
+}: Omit<LayoutProps<'/[locale]'>, 'children'>): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale });
 
@@ -27,21 +22,18 @@ export async function generateMetadata({ params }: Omit<Props, 'children'>) {
   };
 }
 
-export default async function LocaleLayout({ children, params }: Props) {
+export default async function LocaleLayout({
+  children,
+  params,
+}: LayoutProps<'/[locale]'>) {
+  // Ensure that the incoming `locale` is valid
   const { locale } = await params;
-  // Validate that the incoming `locale` parameter is valid
-  if (!routing.locales.includes(locale as any)) notFound();
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
 
   // Enable static rendering
   setRequestLocale(locale);
 
-  // Providing all messages to the client
-  // side is the easiest way to get started
-  const messages = await getMessages();
-
-  return (
-    <NextIntlClientProvider messages={messages}>
-      {children}
-    </NextIntlClientProvider>
-  );
+  return <NextIntlClientProvider>{children}</NextIntlClientProvider>;
 }

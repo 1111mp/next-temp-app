@@ -1,7 +1,12 @@
 'use client';
 
 import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
-import { loggerLink, unstable_httpBatchStreamLink } from '@trpc/client';
+import {
+  httpBatchLink,
+  httpBatchStreamLink,
+  loggerLink,
+  splitLink,
+} from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
 import { useState } from 'react';
@@ -17,7 +22,9 @@ const getQueryClient = () => {
     return createQueryClient();
   }
   // Browser: use singleton pattern to keep the same query client
-  return (clientQueryClientSingleton ??= createQueryClient());
+  clientQueryClientSingleton ??= createQueryClient();
+
+  return clientQueryClientSingleton;
 };
 
 export const api = createTRPCReact<AppRouter>();
@@ -47,18 +54,34 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
             process.env.NODE_ENV === 'development' ||
             (op.direction === 'down' && op.result instanceof Error),
         }),
-        /// https://trpc.io/docs/client/links/httpBatchStreamLink
-        /// https://github.com/trpc/trpc/discussions/4792
-        /// If you require the ability to change/set response headers (which includes cookies) from within your procedures,
-        /// make sure to use httpBatchLink instead! This is due to the fact that unstable_httpBatchStreamLink does not support setting headers once the stream has begun.
-        unstable_httpBatchStreamLink({
-          transformer: SuperJSON,
-          url: getBaseUrl() + '/api/trpc',
-          headers: () => {
-            const headers = new Headers();
-            headers.set('x-trpc-source', 'nextjs-react');
-            return headers;
+        splitLink({
+          condition(op) {
+            return Boolean(op.context.skipStream);
           },
+          true: httpBatchLink({
+            transformer: SuperJSON,
+            url: getBaseUrl() + '/api/trpc',
+            headers: () => {
+              const headers = new Headers();
+              headers.set('x-trpc-source', 'nextjs-react');
+              return headers;
+            },
+            fetch(url, options) {
+              return fetch(url, {
+                ...options,
+                credentials: 'include',
+              });
+            },
+          }),
+          false: httpBatchStreamLink({
+            transformer: SuperJSON,
+            url: getBaseUrl() + '/api/trpc',
+            headers: () => {
+              const headers = new Headers();
+              headers.set('x-trpc-source', 'nextjs-react');
+              return headers;
+            },
+          }),
         }),
       ],
     }),

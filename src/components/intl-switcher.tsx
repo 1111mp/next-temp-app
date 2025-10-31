@@ -1,6 +1,6 @@
 import { startTransition } from 'react';
 import { useLocale } from 'next-intl';
-import { usePathname, useRouter } from '@/i18n/routing';
+import { usePathname, useRouter } from '@/i18n/navigation';
 import {
   Select,
   SelectContent,
@@ -34,7 +34,7 @@ export function I18nSwitcher() {
       <SelectContent>
         <SelectGroup>
           <SelectItem value='en'>English</SelectItem>
-          <SelectItem value='zh_cn'>简体中文</SelectItem>
+          <SelectItem value='zh-CN'>简体中文</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>

@@ -1,6 +1,5 @@
-import { stackMiddlewares } from '@/middlewares/stack-middlewares';
-import { withI18n } from '@/middlewares/with-i18n';
-import { withAuthorization } from '@/middlewares/with-authorization';
+import { stackMiddlewares } from '@/proxys/stack';
+import { withAuthorization, withI18n } from '@/proxys';
 
 export const config = {
   matcher: [
@@ -16,4 +15,4 @@ export const config = {
   ],
 };
 
-export const middleware = stackMiddlewares([withAuthorization, withI18n]);
+export const proxy = stackMiddlewares([withAuthorization, withI18n]);

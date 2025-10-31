@@ -44,4 +44,11 @@ const getServerActionSession = async (options?: Partial<SessionOptions>) => {
   return session;
 };
 
-export { getSession, getServerActionSession };
+const getSessionOptions = (options?: Partial<SessionOptions>) => {
+  return {
+    ...sessionOptions,
+    ...options,
+  };
+};
+
+export { getSession, getServerActionSession, getSessionOptions };

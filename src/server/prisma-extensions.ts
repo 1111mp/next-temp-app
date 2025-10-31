@@ -73,26 +73,29 @@ export const PrismaExtensionStaticMethods = Prisma.defineExtension((prisma) =>
         },
       },
       user: {
-        async signUp(args: Prisma.UserCreateInput) {
+        async createOne(args: Prisma.UserCreateInput) {
           const { name, email, password } = args;
           const hashed = await hash(password, 10);
 
-          return prisma.user.create({
+          const user = await prisma.user.create({
             data: {
               name,
               email,
               password: hashed,
             },
           });
+          return exclude(user, ['password']);
         },
 
-        async signIn(args: Pick<Prisma.UserCreateInput, 'email' | 'password'>) {
+        async login(args: Pick<Prisma.UserCreateInput, 'email' | 'password'>) {
           const { email, password } = args;
           const user = await prisma.user.findFirst({
             where: { email },
           });
 
-          if (user === null) return null;
+          if (user === null) {
+            return null;
+          }
 
           const same = await compare(password, user.password);
           return same ? exclude(user, ['password']) : null;
@@ -103,7 +106,9 @@ export const PrismaExtensionStaticMethods = Prisma.defineExtension((prisma) =>
             where: { email },
           });
 
-          if (user === null) return null;
+          if (user === null) {
+            return null;
+          }
 
           return exclude(user, ['password']);
         },

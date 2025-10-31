@@ -1,10 +1,10 @@
-import { NextResponse, type NextMiddleware } from 'next/server';
-import type { MiddlewareFactory } from './types';
+import { NextResponse, type NextProxy } from 'next/server';
+import type { ProxyFactory } from './types';
 
 export function stackMiddlewares(
-  middlewares: MiddlewareFactory[] = [],
+  middlewares: ProxyFactory[] = [],
   index = 0,
-): NextMiddleware {
+): NextProxy {
   const middleware = middlewares[index];
   if (middleware) {
     const next = stackMiddlewares(middlewares, index + 1);

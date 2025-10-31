@@ -9,6 +9,7 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
+import { z } from '@/lib/zod';
 
 import { db } from '@/server/db';
 import { getServerActionSession } from '@/lib/session';
@@ -50,7 +51,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       data: {
         ...shape.data,
         zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
+          error.cause instanceof ZodError ? z.treeifyError(error.cause) : null,
       },
     };
   },
@@ -127,7 +128,7 @@ export const protectedProcedure = t.procedure
     return next({
       ctx: {
         // infers the `session` as non-nullable
-        session: { ...ctx.session },
+        session: ctx.session,
         user: ctx.session.user,
       },
     });

@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server';
 import { getServerActionSession } from '@/lib/session';
 
 import type { NextFetchEvent, NextRequest } from 'next/server';
-import type { MiddlewareFactory } from './types';
+import type { ProxyFactory } from './types';
 
-export const withAuthorization: MiddlewareFactory = (next) => {
+export const withAuthorization: ProxyFactory = (next) => {
   return async (req: NextRequest, _next: NextFetchEvent) => {
-    if (!/\/login$/g.test(req.nextUrl.pathname)) {
+    if (!req.nextUrl.pathname.endsWith('/login')) {
       const session = await getServerActionSession();
-      if (!session || !session.user)
+      if (!session.user)
         return NextResponse.redirect(new URL('/login', req.url));
     }
 

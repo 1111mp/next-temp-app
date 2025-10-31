@@ -1,0 +1,11 @@
+{
+  "title": "next-temp-app",
+  "description": "一个用于创建全栈、类型安全的 Next.js 应用程序的模板。",
+  "IndexPage": {
+    "title": "你好，世界！"
+  },
+  "LoginPage": {
+    "Log-in": "登录",
+    "Sign-up": "注册"
+  }
+}

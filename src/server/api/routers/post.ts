@@ -1,23 +1,9 @@
-import { z } from 'zod';
-
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from '@/server/api/trpc';
-import { PostCreationInput } from '@/validates/post-validate';
+import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
+import { PostCreateOneInput } from '@/lib/validates';
 
 export const postRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
-
   create: protectedProcedure
-    .input(PostCreationInput)
+    .input(PostCreateOneInput)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.post.create({
         data: {
@@ -28,9 +14,11 @@ export const postRouter = createTRPCRouter({
       });
     }),
 
-  getLatest: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.post.findFirst({
+  getLatest: protectedProcedure.query(async ({ ctx }) => {
+    const post = await ctx.db.post.findFirst({
       orderBy: { createdAt: 'desc' },
     });
+
+    return post ?? null;
   }),
 });
