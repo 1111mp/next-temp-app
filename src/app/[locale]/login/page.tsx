@@ -1,6 +1,5 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import {
   Button,
@@ -20,6 +19,7 @@ import {
 } from '@/components/ui';
 import { NextLogo } from '@/components/next-logo';
 import { useRouter } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { UserLoginInput, UserCreateOneInput } from '@/lib/validates';
 import { z } from '@/lib/zod';
 import { zodResolver } from '@hookform/resolvers/zod';

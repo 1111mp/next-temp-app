@@ -1,36 +1,66 @@
 // @vitest-environment node
 
-import { describe, expect, test } from 'vitest';
-import { NextRequest } from 'next/server';
-import { POST as LoginHandler } from '@/app/api/auth/login/route';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { env } from '@/env.js';
+import { userRouter } from '@/server/api/routers/user';
+import { TRPCError } from '@trpc/server';
 
-describe('apis: /api/auth', () => {
-  test('/api/auth/login', async () => {
-    const req = new NextRequest('http://127.0.0.1:3000', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
+describe('userRouter.login', () => {
+  const mockCtx = {
+    db: {
+      user: {
+        login: vi.fn(),
       },
-      body: JSON.stringify({
-        email: env.TEST_USER_EMAIL,
-        password: env.TEST_USER_PASSWORD,
-        remember: false,
-      }),
-    });
+    },
+    session: {
+      user: null,
+      save: vi.fn(),
+      updateConfig: vi.fn(),
+    },
+  } as any;
 
-    const resp = await LoginHandler(req);
-    expect(resp).toBeDefined();
-    expect(resp.status).toBe(200);
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
-    const ret = await resp.json();
-    expect(ret).toBeDefined();
-    expect(ret.code).toBe(200);
-    expect(ret.data).toMatchObject({
-      id: 1,
-      name: env.TEST_USER_NAME,
+  test('✅ should login successfully', async () => {
+    // mock database user
+    const mockUser = { id: 1, email: 'a@b.com', name: 'test' };
+    mockCtx.db.user.login.mockResolvedValue(mockUser);
+
+    const input = {
       email: env.TEST_USER_EMAIL,
+      password: env.TEST_USER_PASSWORD,
+      remember: true,
+    };
+
+    const result = await userRouter.createCaller(mockCtx).login(input);
+
+    expect(result).toEqual(mockUser);
+    expect(mockCtx.session.user).toEqual(mockUser);
+    expect(mockCtx.session.save).toHaveBeenCalled();
+    expect(mockCtx.session.updateConfig).toHaveBeenCalled();
+  });
+
+  test('❌ should throw error when user not found', async () => {
+    mockCtx.db.user.login.mockResolvedValue(null);
+
+    const input = {
+      email: env.TEST_USER_EMAIL,
+      password: env.TEST_USER_PASSWORD,
+      remember: false,
+    };
+
+    await expect(userRouter.createCaller(mockCtx).login(input)).rejects.toThrow(
+      TRPCError,
+    );
+
+    await expect(
+      userRouter.createCaller(mockCtx).login(input),
+    ).rejects.toMatchObject({
+      message: 'Invalid account or password',
     });
-    expect(ret.message).toBe('successed');
+
+    expect(mockCtx.session.save).not.toHaveBeenCalled();
   });
 });
