@@ -12,7 +12,7 @@ import { ZodError } from 'zod';
 import { z } from '@/lib/zod';
 
 import { db } from '@/server/db';
-import { getServerActionSession } from '@/lib/session';
+import { auth } from '@/server/better-auth';
 
 /**
  * 1. CONTEXT
@@ -27,12 +27,14 @@ import { getServerActionSession } from '@/lib/session';
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const session = await getServerActionSession();
+  const session = await auth.api.getSession({
+    headers: opts.headers,
+  });
 
   return {
     db,
-    ...opts,
     session,
+    ...opts,
   };
 };
 
@@ -121,15 +123,14 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
 export const protectedProcedure = t.procedure
   .use(timingMiddleware)
   .use(({ ctx, next }) => {
-    if (!ctx.session || !ctx.session.user) {
+    if (!ctx.session?.user) {
       throw new TRPCError({ code: 'UNAUTHORIZED' });
     }
 
     return next({
       ctx: {
         // infers the `session` as non-nullable
-        session: ctx.session,
-        user: ctx.session.user,
+        session: { ...ctx.session, user: ctx.session.user },
       },
     });
   });

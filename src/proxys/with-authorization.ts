@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getServerActionSession } from '@/lib/session';
+import { getSession } from '@/server/better-auth/server';
 
 import type { NextFetchEvent, NextRequest } from 'next/server';
 import type { ProxyFactory } from './types';
@@ -7,8 +7,8 @@ import type { ProxyFactory } from './types';
 export const withAuthorization: ProxyFactory = (next) => {
   return async (req: NextRequest, _next: NextFetchEvent) => {
     if (!req.nextUrl.pathname.endsWith('/login')) {
-      const session = await getServerActionSession();
-      if (!session.user)
+      const session = await getSession();
+      if (!session?.user)
         return NextResponse.redirect(new URL('/login', req.url));
     }
 

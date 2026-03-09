@@ -7,9 +7,9 @@ export const postRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return ctx.db.post.create({
         data: {
-          userId: ctx.user.id,
           name: input.name,
           description: input.description,
+          createdBy: { connect: { id: ctx.session.user.id } },
         },
       });
     }),
@@ -17,6 +17,9 @@ export const postRouter = createTRPCRouter({
   getLatest: protectedProcedure.query(async ({ ctx }) => {
     const post = await ctx.db.post.findFirst({
       orderBy: { createdAt: 'desc' },
+      where: {
+        createdBy: { id: ctx.session.user.id },
+      },
     });
 
     return post ?? null;

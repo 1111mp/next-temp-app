@@ -7,7 +7,7 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.url(),
     NODE_ENV: z
       .enum(['development', 'test', 'production'])
       .default('development'),
@@ -16,22 +16,26 @@ export const env = createEnv({
     APP_RANDOM_PASSWORD: z.string(),
 
     // REDIS
-    REDIS_HOST: z.string(),
-    REDIS_PORT: z.string(),
-    REDIS_DB: z.string(),
-    REDIS_USERNAME: z.string(),
-    REDIS_PWD: z.string(),
+    REDIS_URL: z.string(),
+
+    // Better Auth
+    BETTER_AUTH_SECRET:
+      process.env.NODE_ENV === 'production'
+        ? z.string()
+        : z.string().optional(),
+    BETTER_AUTH_GITHUB_CLIENT_ID: z.string(),
+    BETTER_AUTH_GITHUB_CLIENT_SECRET: z.string(),
 
     // nodemailer
     SMTP_HOST: z.string(),
     SMTP_PORT: z.string(),
     EMAIL_FROM: z.string(),
-    SMTP_USER: z.string().email(),
+    SMTP_USER: z.email(),
     SMTP_PASSWORD: z.string(),
 
     // test
     TEST_USER_NAME: z.string(),
-    TEST_USER_EMAIL: z.string().email(),
+    TEST_USER_EMAIL: z.email(),
     TEST_USER_PASSWORD: z.string(),
   },
 
@@ -55,11 +59,12 @@ export const env = createEnv({
     APP_AUTH_KEY: process.env.APP_AUTH_KEY,
     APP_RANDOM_PASSWORD: process.env.APP_RANDOM_PASSWORD,
     // REDIS
-    REDIS_HOST: process.env.REDIS_HOST,
-    REDIS_PORT: process.env.REDIS_PORT,
-    REDIS_DB: process.env.REDIS_DB,
-    REDIS_USERNAME: process.env.REDIS_USERNAME,
-    REDIS_PWD: process.env.REDIS_PWD,
+    REDIS_URL: process.env.REDIS_URL,
+    // Better Auth
+    BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+    BETTER_AUTH_GITHUB_CLIENT_ID: process.env.BETTER_AUTH_GITHUB_CLIENT_ID,
+    BETTER_AUTH_GITHUB_CLIENT_SECRET:
+      process.env.BETTER_AUTH_GITHUB_CLIENT_SECRET,
     // nodemailer
     SMTP_HOST: process.env.SMTP_HOST,
     SMTP_PORT: process.env.SMTP_PORT,

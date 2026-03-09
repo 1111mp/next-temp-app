@@ -35,46 +35,46 @@ afterEach(() => {
  */
 vi.mock('@/i18n/navigation', () => {
   return {
-    useRouter: vi.fn(),
+    useRouter: () => ({
+      replace: vi.fn(),
+      push: vi.fn(),
+    }),
   };
 });
 
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => {
     const dict: Record<string, string> = {
-      'LoginPage.Log-in': 'Log-in',
+      'LoginPage.Sign-in': 'Sign-in',
       'LoginPage.Sign-up': 'Sign-up',
     };
     return dict[key] || key;
   },
 }));
 
-// ✅ Mock tRPC
-vi.mock('@/trpc/react', () => ({
-  api: {
-    user: {
-      login: {
-        useMutation: vi.fn(() => ({
-          mutate: vi.fn(),
-          isPending: false,
-        })),
-      },
-      create: {
-        useMutation: vi.fn(() => ({
-          mutate: vi.fn(),
-          isPending: false,
-        })),
-      },
+// ✅ Mock better-auth/client
+vi.mock('@/server/better-auth/client', () => ({
+  authClient: {
+    signIn: {
+      email: vi.fn(),
+      magicLink: vi.fn(),
+      social: vi.fn(),
+    },
+    signUp: {
+      email: vi.fn(),
     },
   },
 }));
 
 describe('page login', () => {
-  test('en', () => {
+  test('should render login button', () => {
     render(<LoginPage />);
 
-    const login = screen.getByTestId('user-login-btn');
-    expect(login).toBeDefined();
-    expect(login).toHaveTextContent('Log In with Password');
+    const loginBtn = screen.getByRole('button', {
+      name: /sign in with password/i,
+    });
+
+    expect(loginBtn).toBeDefined();
+    expect(loginBtn).toHaveTextContent('Sign in with Password');
   });
 });

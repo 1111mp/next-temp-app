@@ -1,21 +1,21 @@
 // @vitest-environment node
 
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { env } from '@/env.js';
-import { userRouter } from '@/server/api/routers/user';
-import { TRPCError } from '@trpc/server';
+import { postRouter } from '@/server/api/routers/post';
 
-describe('userRouter.login', () => {
+describe('postRouter.create', () => {
   const mockCtx = {
     db: {
-      user: {
-        login: vi.fn(),
+      post: {
+        create: vi.fn(),
       },
     },
     session: {
-      user: null,
-      save: vi.fn(),
-      updateConfig: vi.fn(),
+      user: {
+        id: 'user_1',
+        name: 'test',
+        email: 'test@example.com',
+      },
     },
   } as any;
 
@@ -23,44 +23,27 @@ describe('userRouter.login', () => {
     vi.clearAllMocks();
   });
 
-  test('✅ should login successfully', async () => {
-    // mock database user
-    const mockUser = { id: 1, email: 'a@b.com', name: 'test' };
-    mockCtx.db.user.login.mockResolvedValue(mockUser);
+  test('✅ should create successfully', async () => {
+    // mock database post
+    const mockPost = { name: 'post', description: 'content' };
+    mockCtx.db.post.create.mockResolvedValue(mockPost);
 
     const input = {
-      email: env.TEST_USER_EMAIL,
-      password: env.TEST_USER_PASSWORD,
-      remember: true,
+      name: 'post',
+      description: 'content',
     };
 
-    const result = await userRouter.createCaller(mockCtx).login(input);
+    const result = await postRouter.createCaller(mockCtx).create(input);
+    expect(result).toEqual(mockPost);
 
-    expect(result).toEqual(mockUser);
-    expect(mockCtx.session.user).toEqual(mockUser);
-    expect(mockCtx.session.save).toHaveBeenCalled();
-    expect(mockCtx.session.updateConfig).toHaveBeenCalled();
-  });
-
-  test('❌ should throw error when user not found', async () => {
-    mockCtx.db.user.login.mockResolvedValue(null);
-
-    const input = {
-      email: env.TEST_USER_EMAIL,
-      password: env.TEST_USER_PASSWORD,
-      remember: false,
-    };
-
-    await expect(userRouter.createCaller(mockCtx).login(input)).rejects.toThrow(
-      TRPCError,
-    );
-
-    await expect(
-      userRouter.createCaller(mockCtx).login(input),
-    ).rejects.toMatchObject({
-      message: 'Invalid account or password',
+    expect(mockCtx.db.post.create).toHaveBeenCalledWith({
+      data: {
+        name: input.name,
+        description: input.description,
+        createdBy: {
+          connect: { id: 'user_1' },
+        },
+      },
     });
-
-    expect(mockCtx.session.save).not.toHaveBeenCalled();
   });
 });

@@ -1,6 +1,9 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
+
 import {
   Button,
   Checkbox,
@@ -19,15 +22,13 @@ import {
 } from '@/components/ui';
 import { NextLogo } from '@/components/next-logo';
 import { useRouter } from '@/i18n/navigation';
-import { useTranslations } from 'next-intl';
-import { UserLoginInput, UserCreateOneInput } from '@/lib/validates';
 import { z } from '@/lib/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
-import { api } from '@/trpc/react';
+import { UserLoginInput, UserCreateOneInput } from '@/lib/validates';
+import { authClient } from '@/server/better-auth/client';
 
 enum TabKey {
-  LoginComponent = 'login',
+  LoginComponent = 'sign-in',
   SignupComponent = 'sign-up',
 }
 
@@ -44,17 +45,17 @@ export default function LoginPage() {
         <Tabs defaultValue={TabKey.LoginComponent}>
           <TabsList>
             <TabsTrigger value={TabKey.LoginComponent}>
-              {t('Log-in')}
+              {t('Sign-in')}
             </TabsTrigger>
             <TabsTrigger value={TabKey.SignupComponent}>
               {t('Sign-up')}
             </TabsTrigger>
           </TabsList>
           <TabsContent value={TabKey.LoginComponent}>
-            <Login />
+            <SignInPage />
           </TabsContent>
           <TabsContent value={TabKey.SignupComponent}>
-            <Signup />
+            <SignUpPage />
           </TabsContent>
         </Tabs>
       </div>
@@ -62,8 +63,9 @@ export default function LoginPage() {
   );
 }
 
-function Login() {
+function SignInPage() {
   const router = useRouter();
+
   const form = useForm<z.infer<typeof UserLoginInput>>({
     resolver: zodResolver(UserLoginInput),
     defaultValues: {
@@ -72,22 +74,23 @@ function Login() {
       remember: false,
     },
   });
-  const login = api.user.login.useMutation({
-    trpc: {
-      context: {
-        skipStream: true,
-      },
-    },
-    onSuccess() {
-      router.replace('/');
-    },
-    onError(error) {
-      toast.error(error.message);
-    },
-  });
 
-  const onSubmit = async (values: z.infer<typeof UserLoginInput>) => {
-    login.mutate(values);
+  const onSubmit = async (value: z.infer<typeof UserLoginInput>) => {
+    await authClient.signIn.email(
+      {
+        email: value.email,
+        password: value.password,
+        rememberMe: value.remember,
+      },
+      {
+        onSuccess: () => {
+          router.replace('/');
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message);
+        },
+      },
+    );
   };
 
   return (
@@ -144,15 +147,59 @@ function Login() {
             </FormItem>
           )}
         />
-        <Button className='mt-4' data-testid='user-login-btn' type='submit'>
-          Log In with Password
+        <Button className='mt-4' type='submit'>
+          Sign in with Password
         </Button>
       </form>
+      <div className='flex items-center space-x-2'>
+        <Button
+          className='mt-4'
+          onClick={async () => {
+            await authClient.signIn.social(
+              {
+                provider: 'github',
+                callbackURL: '/',
+              },
+              {
+                onError(ctx) {
+                  toast.error(ctx.error.message);
+                },
+              },
+            );
+          }}
+        >
+          Sign in with Github
+        </Button>
+        <Button
+          className='mt-4'
+          onClick={async () => {
+            await authClient.signIn.magicLink(
+              {
+                email: 'The1111mp@outlook.com',
+                name: 'The1111mp',
+              },
+              {
+                onSuccess(ctx) {
+                  console.log('ctx', ctx);
+                  toast.success(
+                    'A sign in link has been send to your email address',
+                  );
+                },
+                onError(ctx) {
+                  toast.error(ctx.error.message);
+                },
+              },
+            );
+          }}
+        >
+          Sign in with Email
+        </Button>
+      </div>
     </Form>
   );
 }
 
-function Signup() {
+function SignUpPage() {
   const router = useRouter();
   const form = useForm<z.infer<typeof UserCreateOneInput>>({
     resolver: zodResolver(UserCreateOneInput),
@@ -163,22 +210,25 @@ function Signup() {
       remember: false,
     },
   });
-  const create = api.user.create.useMutation({
-    trpc: {
-      context: {
-        skipStream: true,
-      },
-    },
-    onSuccess() {
-      router.replace('/');
-    },
-    onError(error) {
-      toast.error(error.message);
-    },
-  });
 
-  const onSubmit = async (values: z.infer<typeof UserCreateOneInput>) => {
-    create.mutate(values);
+  const onSubmit = async (value: z.infer<typeof UserCreateOneInput>) => {
+    await authClient.signUp.email(
+      {
+        name: value.name,
+        email: value.email,
+        password: value.password,
+        // @ts-expect-error rememberMe is supported at runtime but missing from types
+        rememberMe: value.remember,
+      },
+      {
+        onSuccess() {
+          router.replace('/');
+        },
+        onError(ctx) {
+          toast.error(ctx.error.message);
+        },
+      },
+    );
   };
 
   return (

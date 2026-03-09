@@ -1,6 +1,7 @@
 import { startTransition } from 'react';
 import { useLocale } from 'next-intl';
-import { usePathname, useRouter } from '@/i18n/navigation';
+import { useParams } from 'next/navigation';
+
 import {
   Select,
   SelectContent,
@@ -8,8 +9,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
-import { useParams } from 'next/navigation';
+} from '@/components/ui';
+import { usePathname, useRouter } from '@/i18n/navigation';
 
 export function I18nSwitcher() {
   const locale = useLocale();

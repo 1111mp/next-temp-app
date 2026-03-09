@@ -1,0 +1,10 @@
+allowBuilds:
+  '@parcel/watcher': false
+  '@prisma/engines': false
+  '@swc/core': false
+  bcrypt: false
+  better-sqlite3: true
+  esbuild: false
+  msw: false
+  prisma: false
+  sharp: false

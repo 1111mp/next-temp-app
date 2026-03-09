@@ -42,5 +42,5 @@
     ".next/dev/types/**/*.ts",
     "vitest-setup.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "generated"]
 }

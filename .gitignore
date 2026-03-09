@@ -13,6 +13,9 @@
 /prisma/db.sqlite-journal
 db.sqlite
 
+# Prisma generated client
+generated/
+
 # next.js
 /.next/
 /out/
@@ -47,3 +50,5 @@ yarn-error.log*
 
 # nvm-desktop
 .nvmdrc
+
+/src/generated/prisma

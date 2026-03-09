@@ -1,20 +1,17 @@
-import { PrismaClient } from '@prisma/client';
-import {
-  PrismaExtensionInstanceMethods,
-  PrismaExtensionStaticMethods,
-  PrismaExtensionTransformedField,
-} from './prisma-extensions';
-
 import { env } from '@/env';
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
+import { PrismaClient } from '../../generated/prisma/client';
+import { PrismaExtensionTransformedField } from './prisma-extensions';
 
+const adapter = new PrismaBetterSqlite3({
+  url: process.env.DATABASE_URL || 'file:./dev.db',
+});
 const createPrismaClient = () =>
   new PrismaClient({
+    adapter,
     log:
       env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  })
-    .$extends(PrismaExtensionTransformedField)
-    .$extends(PrismaExtensionInstanceMethods)
-    .$extends(PrismaExtensionStaticMethods);
+  }).$extends(PrismaExtensionTransformedField);
 
 const globalForPrisma = globalThis as unknown as {
   prisma: ReturnType<typeof createPrismaClient> | undefined;

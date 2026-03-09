@@ -5,7 +5,7 @@
 		"title": "Hello world!"
 	},
 	"LoginPage": {
-		"Log-in": "Log In",
+		"Sign-in": "Sign In",
 		"Sign-up": "Sign Up"
 	}
 }
