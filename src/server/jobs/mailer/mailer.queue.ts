@@ -1,5 +1,6 @@
 import { Queue } from 'bullmq';
 
+import { env } from '@/env';
 import { redisClient } from '@/server/redis';
 
 import type { SendMailOptions, SentMessageInfo } from 'nodemailer';
@@ -27,6 +28,6 @@ const globalForQueue = globalThis as unknown as {
 
 export const mailerQueue = globalForQueue.mailerQueue ?? createMailerQueue();
 
-if (process.env.NODE_ENV !== 'production') {
+if (env.NODE_ENV !== 'production') {
   globalForQueue.mailerQueue = mailerQueue;
 }

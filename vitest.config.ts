@@ -10,6 +10,7 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, './src'),
     },
+    globals: true,
     watch: false,
     environment: 'jsdom',
     reporters: ['verbose'],

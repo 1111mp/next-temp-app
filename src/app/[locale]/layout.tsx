@@ -48,7 +48,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className='h-full' suppressHydrationWarning>
-      <body className={`flex h-full flex-col ${geist.variable}`}>
+      <body className={`h-full ${geist.variable}`}>
         <TRPCReactProvider>
           <ThemeProvider>
             <NextIntlClientProvider>{children}</NextIntlClientProvider>

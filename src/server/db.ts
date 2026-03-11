@@ -4,7 +4,7 @@ import { PrismaClient } from '../../generated/prisma/client';
 import { PrismaExtensionTransformedField } from './prisma-extensions';
 
 const adapter = new PrismaBetterSqlite3({
-  url: process.env.DATABASE_URL || 'file:./dev.db',
+  url: env.DATABASE_URL,
 });
 const createPrismaClient = () =>
   new PrismaClient({

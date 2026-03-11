@@ -9,12 +9,20 @@ export const UserLoginInput = z.object({
   remember: z.boolean().default(false).optional(),
 });
 
-export const UserCreateOneInput = z.object({
-  name: z.string().min(5, 'Invalid name'),
-  email: z.email('Invalid email'),
-  password: z.string().regex(regex, 'Invalid password'),
-  remember: z.boolean().default(false).optional(),
-});
+export const UserCreateOneInput = z
+  .object({
+    name: z.string().min(5, 'Invalid name'),
+    email: z.email('Invalid email'),
+    password: z.string().regex(regex, 'Invalid password'),
+    passwordConfirmation: z
+      .string()
+      .regex(regex, 'Please confirm your password'),
+    remember: z.boolean().default(false).optional(),
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    message: 'Passwords do not match.',
+    path: ['passwordConfirmation'],
+  });
 
 export const UserLoginByEmailInput = z.object({
   email: z.email('Invalid email'),

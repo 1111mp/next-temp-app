@@ -1,19 +1,17 @@
 'use client';
 
-import { api } from '@/trpc/react';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
   Input,
-} from './ui';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+} from '@/components/ui';
 import { PostCreateOneInput } from '@/lib/validates';
+import { api } from '@/trpc/react';
 import { z } from '@/lib/zod';
 
 export function LatestPost() {
@@ -44,39 +42,53 @@ export function LatestPost() {
       ) : (
         <p className='showcaseText'>You have no posts yet.</p>
       )}
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
-            control={form.control}
+      <form id='form-create-post' onSubmit={form.handleSubmit(onSubmit)}>
+        <FieldGroup className='gap-2'>
+          <Controller
             name='name'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder='Enter name' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
             control={form.control}
-            name='description'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Input placeholder='Enter description' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor='form-create-post-name'>Name</FieldLabel>
+                <Input
+                  {...field}
+                  id='form-create-post-name'
+                  placeholder='Enter name'
+                  data-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
             )}
           />
-          <Button className='mt-4' type='submit'>
-            {createPost.isPending ? 'Submitting...' : 'Submit'}
-          </Button>
-        </form>
-      </Form>
+          <Controller
+            name='description'
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor='form-create-post-description'>
+                  Description
+                </FieldLabel>
+                <Input
+                  {...field}
+                  id='form-create-post-description'
+                  placeholder='Enter description'
+                  data-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+        </FieldGroup>
+      </form>
+      <Field className='mt-4'>
+        <Button type='submit' form='form-create-post'>
+          {createPost.isPending ? 'Submitting...' : 'Submit'}
+        </Button>
+      </Field>
     </div>
   );
 }

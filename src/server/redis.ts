@@ -6,7 +6,7 @@ const createRedisClient = () => {
   const client = new Redis(env.REDIS_URL, {
     lazyConnect: true,
     enableAutoPipelining: true,
-    showFriendlyErrorStack: process.env.NODE_ENV !== 'production',
+    showFriendlyErrorStack: env.NODE_ENV !== 'production',
 
     maxRetriesPerRequest: null,
 
@@ -52,6 +52,6 @@ const globalForRedis = globalThis as unknown as {
 
 export const redisClient = globalForRedis.redisClient ?? createRedisClient();
 
-if (process.env.NODE_ENV !== 'production') {
+if (env.NODE_ENV !== 'production') {
   globalForRedis.redisClient = redisClient;
 }

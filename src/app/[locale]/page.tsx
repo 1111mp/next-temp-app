@@ -23,9 +23,9 @@ export default function IndexPage({ params }: PageProps<'/[locale]'>) {
   return (
     <HydrateClient>
       {/* https://github.com/vercel/next.js/issues/49427 */}
-      <div></div>
+      <div />
       <Navbar user={session?.user} />
-      <main className='flex flex-1 flex-col px-4'>
+      <main className='mx-auto flex max-w-md flex-1 flex-col px-4'>
         <div className='flex-1'>
           <h1>{t('title')}</h1>
           {session?.user && <LatestPost />}

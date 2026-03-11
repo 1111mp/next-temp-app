@@ -21,6 +21,6 @@ const globalForTransport = globalThis as unknown as {
 export const mailerTransport =
   globalForTransport.mailerTransport ?? createMailerTransport();
 
-if (process.env.NODE_ENV !== 'production') {
+if (env.NODE_ENV !== 'production') {
   globalForTransport.mailerTransport = mailerTransport;
 }
