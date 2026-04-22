@@ -15,9 +15,7 @@ export const auth = betterAuth({
   plugins: [
     nextCookies(),
     magicLink({
-      async sendMagicLink(data, ctx) {
-        console.log('data', data);
-        console.log('ctx', ctx);
+      async sendMagicLink(data) {
         await sendMail({
           to: data.email,
           subject: '[next-temp-app]: Sign in with your email',

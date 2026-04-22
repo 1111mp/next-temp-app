@@ -10,7 +10,6 @@ const createMailerWorker = () =>
   new Worker<SendMailOptions, SentMessageInfo, 'mailer'>(
     'mailer',
     async (job) => {
-      console.log('job', job);
       const { to, subject, text, html, attachments, ...opts } = job.data;
       const info = await mailerTransport.sendMail({
         from: env.EMAIL_FROM,

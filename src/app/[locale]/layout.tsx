@@ -2,9 +2,9 @@ import { notFound } from 'next/navigation';
 import { Geist } from 'next/font/google';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { ThemeProvider } from 'next-themes';
 
 import { TRPCReactProvider } from '@/trpc/react';
-import { ThemeProvider } from '@/app/theme-provider';
 import { Toaster } from '@/components/ui';
 import { routing } from '@/i18n/routing';
 
@@ -50,7 +50,7 @@ export default async function LocaleLayout({
     <html lang={locale} className='h-full' suppressHydrationWarning>
       <body className={`h-full ${geist.variable}`}>
         <TRPCReactProvider>
-          <ThemeProvider>
+          <ThemeProvider attribute='class'>
             <NextIntlClientProvider>{children}</NextIntlClientProvider>
           </ThemeProvider>
         </TRPCReactProvider>
